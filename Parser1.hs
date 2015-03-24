@@ -79,6 +79,9 @@ data Value = JString String
            | JNumber Int
             deriving (Show)
 
+spacey :: Parser a -> Parser a
+spacey p = between skipSpaces p skipSpaces
+
 jstring :: Parser String
 jstring = do
   _ <- char '\"'
@@ -92,18 +95,14 @@ jnumber = read <$> takeWhile Char.isDigit
 jobject :: Parser [(String, Value)]
 jobject = do
   _     <- char '{'
-  pairs <- pair `sepBy` (skipSpaces *> char ',' <* skipSpaces)
+  pairs <- pair `sepBy` (spacey (char ','))
   _     <- char '}'
   return pairs
   where
     pair = do
-      _ <- skipSpaces
-      k <- jstring
-      _ <- skipSpaces
+      k <- spacey jstring
       _ <- char ':'
-      _ <- skipSpaces
-      v <- jvalue
-      _ <- skipSpaces
+      v <- spacey jvalue
       return (k, v)
 
 jvalue :: Parser Value
