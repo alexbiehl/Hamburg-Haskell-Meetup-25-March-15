@@ -51,7 +51,7 @@ char c = Parser $ \s ->
 string :: String -> Parser String
 string = mapM char
 
--- | Takes from input while a specified predicate is True
+-- | Takes from input while a specified predicate is True (this parser never fails)
 takeWhile :: (Char -> Bool) -> Parser String
 takeWhile p = Parser $ \s -> let
     (prefix, suffix) = List.span p s
