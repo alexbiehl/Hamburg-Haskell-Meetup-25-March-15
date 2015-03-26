@@ -84,9 +84,9 @@ spacey p = between skipSpaces p skipSpaces
 
 jstring :: Parser String
 jstring = do
-  _ <- char '\"'
+  _ <- char '"'
   s <- takeWhile ('"' /=)
-  _ <- char '\"'
+  _ <- char '"'
   return s
 
 jnumber :: Parser Int
@@ -110,6 +110,7 @@ jvalue =
         (JString <$> jstring)
     <|> (JObject <$> jobject)
     <|> (JNumber <$> jnumber)
+    <|> empty
 
 main :: IO ()
 main = do
